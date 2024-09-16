@@ -11,6 +11,8 @@ find_package(Logging REQUIRED)
 file(GLOB all_SRCS
         ${PROJECT_SOURCE_DIR}/src/*.cpp
         ${PROJECT_SOURCE_DIR}/src/*.h
+        ${PROJECT_SOURCE_DIR}/../common/*.cpp
+        ${PROJECT_SOURCE_DIR}/../common/*.h
         )
 
 add_executable(${PROJECT_NAME}

@@ -8,73 +8,65 @@
 #include<unistd.h>
 #include<netdb.h>
 
-using namespace std;
+#include "../../common/common.h"
+
+#define MAX_BUFFER_SIZE 1024
 
 int main()
 {
-	int sock;
-	int portNum = 1500; // note the server and clients IP are the same
+	int sockfd;
+	int portNum = 5000; // note the server and clients IP are the same
 	bool isExit = false;
-	int bufsize = 1024;
 	
-	char send_data[bufsize], recv_data[bufsize];
-	struct hostent *ip;
-	struct sockaddr_in server_addr;
+	char send_data[MAX_BUFFER_SIZE], recv_data[MAX_BUFFER_SIZE];
 
 	//init socket
+	struct hostent *ip;
 	ip = gethostbyname("127.0.0.1");
 
-	bzero(&server_addr, sizeof(sockaddr_in));  // Clear Structure memory
-	sock = socket(AF_INET, SOCK_STREAM, 0);
-
-	if(sock < 0)
-	{
-		cout << "Error creating socket..." << endl;
-		exit(1);
-	}
+	sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if(sockfd < 0)
+		errorCheck("Error creating socket...");
 	else
-		cout << "Client Socket created" << endl;
+		std::cout << "Client Socket created" << std::endl;
 
+	struct sockaddr_in server_addr;
+	bzero(&server_addr, sizeof(sockaddr_in));  // Clear Structure memory
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = htons(portNum);
 	server_addr.sin_addr = *((struct in_addr *) ip->h_addr);
 
-	// connecting socket server
-
-	if(connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
-	{
-		cout << "Failed to connect server..." << endl;
-		exit(1);
-	}
+	// Connecting socket server
+	if(connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
+		errorCheck("Failed to connect server...");
 	else
-		cout << "Connection successful" << endl;
+		std::cout << "Connection successful" << std::endl;
 
-	cout << "Connected to server (IP= " 
-	     << inet_ntoa(server_addr.sin_addr)
-	     << ", PORT= " 
-	     << ntohs(server_addr.sin_port) << "): " 
-	     << recv_data << endl;
+	std::cout << "Connected to server (IP= " 
+			<< inet_ntoa(server_addr.sin_addr)
+			<< ", PORT= " 
+			<< ntohs(server_addr.sin_port) << ")" << std::endl;
 
-	recv(sock, recv_data, bufsize, 0);
+	/*recv(sockfd, recv_data, bufsize, 0);
 	
-	cout << "Reponse from server: " << recv_data << endl;
-	cout << "Enter # to end the connection" << endl;
+	std::cout << "Reponse from server: " << recv_data << std::endl;*/
+	std::cout << "Enter # to end the connection" << std::endl;
 
 	do{
-		cout << "Client: ";
-		cin.getline(send_data,bufsize);
+		std::cout << "Client: ";
+		std::cin.getline(send_data, MAX_BUFFER_SIZE);
 
 		if (*send_data == '#')
 			isExit = true;
-		
-		send(sock, send_data, bufsize, 0);
+
+		send(sockfd, send_data, std::cin.gcount(), 0);
 
 	}while(!isExit);
 
-	cout << "Connection terminated..." << endl;
-	cout << "Goodbye" << endl;
+	std::cout << "Client connection terminated..." << std::endl;
+	std::cout << "Goodbye" << std::endl;
 
-	close(sock);
+	close(sockfd);
 	
 	return 0;
 }
