@@ -5,9 +5,14 @@ void HK::TCPListener::init()
     // Create a socket
     m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if(m_socket < 0)
-		errorCheck("Error creating socket...");
+		errorCheck("Error creating socket...\n");
     else
         std::cout << "Server socket connection created..." << "(socketfd = " << m_socket << ")" << std::endl;
+
+	// Setting SO_REUSEADDR to ensures that we don't run into 'Address already in use' errors
+	int reuse = 1;
+	if (setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
+		errorCheck("setsockopt failed\n");
 
 	// Initialize struct of server address
 	struct sockaddr_in m_server_addr;
@@ -18,20 +23,20 @@ void HK::TCPListener::init()
 	// Convert string of IP address to binary equivalent
 	// server_addr.sin_addr.s_addr = htons(INADDR_ANY); // if hosted at 0.0.0.0
     if(inet_pton(AF_INET, m_ipAddress, &m_server_addr.sin_addr) <= 0)
-		errorCheck("Error establishing IP address...");
+		errorCheck("Error establishing IP address...\n");
 
     // Binding ip address and port to a socket
 	if(bind(m_socket, (struct sockaddr*)& m_server_addr, sizeof(struct sockaddr)) < 0)
 	{
 		close(m_socket);
-		errorCheck("Error binding socket...");
+		errorCheck("Error binding socket...\n");
 	}
 	else
 		std::cout << "Server socket is binded at address = " << m_ipAddress << ":" << m_port << std::endl;
 
 	// Listening socket (Default 10 connections)
 	if(listen(m_socket, m_maxConnect) < 0)
-		errorCheck("Error listening...");
+		errorCheck("Error listening...\n");
 	else
 		std::cout << "Waiting for clients to connect..." << std::endl;
 
@@ -52,7 +57,7 @@ int HK::TCPListener::run()
 		int connfd = accept(m_socket, (struct sockaddr*)& client_addr, &size);
 
 		if(connfd < 0)
-			errorCheck("Error on accepting...");
+			errorCheck("Error on accepting...\n");
 
 		std::cout << "Connected with client (IP = " 
 			<< inet_ntoa(client_addr.sin_addr) 
