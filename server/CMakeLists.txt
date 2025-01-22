@@ -21,3 +21,7 @@ add_executable(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PRIVATE ${MY_INCLUDE_DIR})
 target_link_directories(${PROJECT_NAME} PRIVATE ${MY_LIB_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE pthread MyLib::Logging)
+
+# Enable testing modules
+enable_testing()
+add_subdirectory(tests)
