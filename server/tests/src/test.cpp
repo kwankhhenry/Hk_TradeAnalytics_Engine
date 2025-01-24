@@ -36,7 +36,6 @@ class ThreadPoolTest: public testing::Test{
     static int Func(int a)
     {
         std::this_thread::sleep_for(std::chrono::seconds(5));
-        val++;
         return a*a; 
     }
 
