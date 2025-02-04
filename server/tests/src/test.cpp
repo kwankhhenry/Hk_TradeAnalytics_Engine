@@ -7,7 +7,13 @@ namespace ThreadTest{
 
 // Define fixture to test ThreadQueue and ThreadPool
 class ThreadPoolTest: public testing::Test{
-    protected:  // You should make the members protected s.t. they can be accessed from sub-classes.
+
+private:
+    // Declares the variables your tests want to use.
+    std::chrono::_V2::system_clock::time_point start, stop;
+    std::chrono::microseconds duration;
+
+protected:  // You should make the members protected s.t. they can be accessed from sub-classes.
     
     // virtual void SetUp() will be called before each test is run.  You
     // should define it if you need to initialize the variables.
@@ -38,10 +44,6 @@ class ThreadPoolTest: public testing::Test{
         std::this_thread::sleep_for(std::chrono::seconds(5));
         return a*a; 
     }
-
-    // Declares the variables your tests want to use.
-    std::chrono::_V2::system_clock::time_point start, stop;
-    std::chrono::microseconds duration;
 };
 
 TEST_F(ThreadPoolTest, TestCase_1)
