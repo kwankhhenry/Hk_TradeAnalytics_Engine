@@ -1,4 +1,4 @@
-#include "common.h"
+#include "custom_error.h"
 
 void errorCheck(const char* fmt)
 {

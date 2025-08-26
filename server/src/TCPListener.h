@@ -12,7 +12,7 @@
 #include <thread>           /* for multi-threading */
 #include <fstream>          /* for reading files */
 
-#include "../../common/common.h"
+#include "custom_error.h"
 
 #define BUFSIZE 1024
 
