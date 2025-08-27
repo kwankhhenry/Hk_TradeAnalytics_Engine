@@ -1,50 +1,6 @@
-#include <chrono>
-#include "gtest/gtest.h"
-
-#include "ThreadPool.h"
+#include "test.h"
 
 namespace ThreadTest{
-    // Define fixture to test ThreadQueue and ThreadPool
-    class ThreadPoolTest: public testing::Test{
-
-    private:
-        // Declares the variables your tests want to use.
-        std::chrono::_V2::system_clock::time_point start, stop;
-        std::chrono::microseconds duration;
-
-    protected:  // You should make the members protected s.t. they can be accessed from sub-classes.
-        
-        // virtual void SetUp() will be called before each test is run.  You
-        // should define it if you need to initialize the variables.
-        // Otherwise, this can be skipped.
-        void SetUp() override {
-            // Start the timer
-            start = std::chrono::high_resolution_clock::now();
-        }
-
-        // virtual void TearDown() will be called after each test is run.
-        // You should define it if there is cleanup work to do.  Otherwise,
-        // you don't have to provide it.
-        //
-        virtual void TearDown() {
-            // Stop the timer
-            stop = std::chrono::high_resolution_clock::now();
-
-            // Calculate the duration
-            duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-
-            // Output the duration in microseconds
-            std::cout << "Time taken by code snippet: " << duration.count() << " microseconds" << std::endl;
-        }
-
-        // A helper function that some test uses.
-        static int Func(int a)
-        {
-            std::this_thread::sleep_for(std::chrono::seconds(5));
-            return a*a; 
-        }
-    };
-
     TEST_F(ThreadPoolTest, TestCase_1)
     {
         // 1. Test default ThreadPool
@@ -65,7 +21,7 @@ namespace ThreadTest{
         std::future<int>res11 = myPool0.PushTask(Func,11);
         std::future<int>res12 = myPool0.PushTask(Func,12);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        std::cout << "Remaining items on queue now: " << myPool0.QueueItems() << std::endl;
+        //std::cout << "Remaining items on queue now: " << myPool0.QueueItems() << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(20000));
     }
 
@@ -74,7 +30,7 @@ namespace ThreadTest{
         // 2. Test ThreadPool with specific size
         ThreadPool myPool1(16);
         std::future<int>res2 = myPool1.PushTask([](const int& a){
-                std::cout<<"This is from Lambda Function \n";
+                //std::cout<<"This is from Lambda Function \n";
                 std::this_thread::sleep_for(std::chrono::milliseconds(2000));
                 return a*a;
             }, 6);

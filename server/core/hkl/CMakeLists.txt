@@ -8,14 +8,12 @@ project(hkl VERSION ${PROJECT_VERSION})
 
 # Internal dependencies
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/..)
-set(COMMON_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../common)
-set(MY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../inc ${COMMON_DIR}/inc)
+set(MY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../inc ${COMMON_SERVER_DIR}/inc)
 set(MY_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 
 # Actual Project files and executables
 file(GLOB all_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/*.h
         )
 
 add_library(${PROJECT_NAME} SHARED ${all_SRCS})

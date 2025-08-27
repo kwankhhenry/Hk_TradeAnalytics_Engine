@@ -17,8 +17,7 @@ link_directories(${EXTERNAL_LIB_DIR}/googletest/build/lib)
 
 # Internal dependencies to test modules
 set(TEST_MODULE_DIR ${PROJECT_ROOT_DIR}/server)
-set(COMMON_DIR ${TEST_MODULE_DIR}/common)
-set(MY_INCLUDE_DIR ${TEST_MODULE_DIR}/inc ${COMMON_DIR}/inc)
+set(MY_INCLUDE_DIR ${TEST_MODULE_DIR}/inc ${COMMON_SERVER_DIR}/inc)
 set(MY_LIB_DIR ${TEST_MODULE_DIR}/lib)
 
 # Actual Project files and executables
@@ -29,7 +28,7 @@ add_executable(${PROJECT_NAME}
     )
 
 # Include + Linking directories
-target_include_directories(${PROJECT_NAME} PRIVATE ${MY_INCLUDE_DIR} ${TEST_MODULE_DIR}/src)
+target_include_directories(${PROJECT_NAME} PRIVATE ${MY_INCLUDE_DIR} ${TEST_MODULE_DIR}/src ${TESTSUITE_DIR})
 target_link_directories(${PROJECT_NAME} PRIVATE ${MY_LIB_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE gtest gtest_main pthread)
 
@@ -38,4 +37,6 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/core)
 
 # Tutorial: https://www.youtube.com/watch?v=mdkVnmj32ZQ
 # Adding google test to be discovered by ctest
-add_test(${PROJECT_NAME} ${PROJECT_NAME})
+#include(GoogleTest)
+#gtest_discover_tests(${PROJECT_NAME})
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})

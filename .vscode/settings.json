@@ -61,5 +61,6 @@
         "variant": "cpp",
         "format": "cpp",
         "future": "cpp"
-    }
+    },
+    "cmake.ctestDefaultArgs": []
 }

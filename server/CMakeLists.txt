@@ -13,8 +13,7 @@ find_package(IcecreamCpp CONFIG REQUIRED)
 include_directories(${IcecreamCpp_INCLUDE_DIRS})
 
 # Internal dependencies
-set(COMMON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/common/inc)
-set(MY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/inc ${COMMON_INCLUDE_DIR})
+set(MY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/inc ${COMMON_SERVER_DIR}/inc)
 set(MY_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/lib)
 
 # Find custom package
@@ -23,9 +22,7 @@ find_package(Logging REQUIRED)
 # Actual Project files and executables
 file(GLOB all_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
         ${CMAKE_CURRENT_SOURCE_DIR}/common/*.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/common/inc/*.h
         )
 
 add_executable(${PROJECT_NAME}

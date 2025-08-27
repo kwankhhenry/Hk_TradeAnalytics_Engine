@@ -10,10 +10,10 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/server)
-add_subdirectory(${PROJECT_SOURCE_DIR}/client)
-add_subdirectory(${PROJECT_SOURCE_DIR}/testsuite/tests/server)
-#add_subdirectory(${PROJECT_SOURCE_DIR}/testsuite/tests/client)
-
 # Enable testing modules
 enable_testing()
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/server)
+add_subdirectory(${PROJECT_SOURCE_DIR}/client)
+add_subdirectory(${PROJECT_SOURCE_DIR}/testsuite)
+#add_subdirectory(${PROJECT_SOURCE_DIR}/testsuite/tests/client)
