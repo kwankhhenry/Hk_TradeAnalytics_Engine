@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef TEST_HKL_H
-#define TEST_HKL_H
+#ifndef TEST_HKLSOCK_H
+#define TEST_HKLSOCK_H
 
 #include "gtest/gtest.h"
 #include "resource/testbase.h"
@@ -21,4 +21,4 @@ protected:
     }
 };
 
-#endif // TEST_HKL_H
+#endif // TEST_HKLSOCK_H

@@ -15,8 +15,8 @@ link_directories(${EXTERNAL_LIB_DIR}/googletest/build/lib)
 
 # Internal dependencies to test modules
 set(TEST_MODULE_DIR ${PROJECT_ROOT_DIR}/server/core/hkl)
-set(MY_INCLUDE_DIR ${TEST_MODULE_DIR}/../inc ${COMMON_SERVER_DIR}/inc)
-set(MY_LIB_DIR ${TEST_MODULE_DIR}/../lib)
+set(MY_INCLUDE_DIR ${TEST_MODULE_DIR}/../inc ${COMMON_SERVER_DIR}/inc ${CMAKE_CURRENT_SOURCE_DIR}/../inc)
+set(MY_LIB_DIR ${TEST_MODULE_DIR}/../lib ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 # Actual Project files and executables
 file(GLOB all_SRCS

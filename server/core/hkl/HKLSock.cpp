@@ -32,10 +32,22 @@ HKLSock::HKLSock(TSocketFd tSocketFd)
 	m_tSocketFd = tSocketFd;
 }
 
-//  Function used to copy HKLSock
-HKLSock& HKLSock::operator=(const HKLSock& oSrc)
+//  Copy constructor that transfers fd from the source to the new object
+HKLSock::HKLSock(HKLSock&& oSrc) noexcept
+	: m_tSocketFd(oSrc.m_tSocketFd)
 {
-	m_tSocketFd = oSrc.m_tSocketFd;
+	oSrc.m_tSocketFd = SOCKET_ERROR;
+}
+
+//  Assignment operator that transfers fd from the source to the new object
+HKLSock& HKLSock::operator=(HKLSock&& oSrc) noexcept
+{
+	if(this != &oSrc && m_tSocketFd != SOCKET_ERROR)
+	{
+		Close(); // Close current fd if open
+		m_tSocketFd = oSrc.m_tSocketFd;
+		oSrc.m_tSocketFd = SOCKET_ERROR;
+	}
 	return *this;
 }
 
@@ -48,6 +60,9 @@ HKLSock::~HKLSock()
 	}
 }
 
+//------------------------------------------------------------------------------
+//	Public interface of Accept, Create, Close, Bind, Connect & Listen
+
 //  Function used to close the open socket
 void HKLSock::Close()
 {
@@ -56,6 +71,40 @@ void HKLSock::Close()
 		close(m_tSocketFd);
 		m_tSocketFd = SOCKET_ERROR;
 	}
+}
+
+//  Function used to bind a socket to a specific port with given Socket Port and Address (E.g. "0.0.0.0", 8080)
+bool HKLSock::Bind(UInt16 uSocketPort, const IString& sSockAddress)
+{
+	struct sockaddr_in tSockAddr;					//	Store target bind address
+	memset (&tSockAddr, 0 , sizeof(tSockAddr));		//  Allocate memory for sockaddr_in structure
+	UInt32 iResult;									//	return -1 if convert to internet address failed,
+													//	otherwise return the Internet address
+
+	tSockAddr.sin_family = AF_INET;
+	tSockAddr.sin_port = htons(uSocketPort);
+	if (sSockAddress == "") 
+	{
+		//	 Bind to any of the Ip/interfaces if no address is specified
+		 tSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	}
+	else
+	{		
+		iResult = inet_addr(sSockAddress.c_str());
+		if (iResult == INADDR_NONE)
+		{
+			return false;	//  Error in Convert to internet address 
+		}
+		//	Bind with known Ip/interface address.		
+		tSockAddr.sin_addr.s_addr = iResult;				
+	}
+	return HKLSock::Bind((struct sockaddr*)&tSockAddr, sizeof(tSockAddr));
+}
+
+//  Function used to bind a socket to a specific port with given Socket Address - Calls on OS functions
+bool HKLSock::Bind(const struct sockaddr* ptSockAddr, Int32 iSockAddrLen)
+{
+	return (SOCKET_ERROR != bind( m_tSocketFd, ptSockAddr, iSockAddrLen));
 }
 
 //---------------------------------------------------------------------------------------------

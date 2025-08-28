@@ -21,8 +21,9 @@
 #ifndef HKLSOCK_H
 #define HKLSOCK_H
 
-#include "HKLSimpleType.h"
+#include "HKLType.h"
 #include <sys/socket.h>		// struct msghdr, struct iovec, socket functions, SOCK_STREAM
+#include <arpa/inet.h>		// inet_addr, inet_ntoa
 #include <netinet/in.h>		// struct sockaddr_in, AF_INET
 #include <unistd.h>			// For socket functions
 
@@ -46,11 +47,32 @@ public:
 	explicit HKLSock(TSocketFd tSocket);
 
 	//* 
-	//  Assignment operator allow copy a object
+	//  Copy constructor (deleted) to avoid copy a object
 	//  @return		reference to assigned HKLSock object
 	//  @param		None
 	//* 
-	HKLSock& operator=(const HKLSock& oSrc);
+	HKLSock(const HKLSock& oSrc) = delete;
+
+	//* 
+	//  Assignment operator (deleted) to avoid copy a object
+	//  @return		reference to assigned HKLSock object
+	//  @param		None
+	//* 
+	HKLSock& operator=(const HKLSock& oSrc) = delete;
+
+	//* 
+	//  Copy constructor that transfer fd from the source to the new object
+	//  @return		reference to assigned HKLSock object
+	//  @param		None
+	//* 
+	HKLSock(HKLSock&& oSrc) noexcept;
+
+	//* 
+	//  Assignment operator that transfer fd from the source to the new object
+	//  @return		reference to assigned HKLSock object
+	//  @param		None
+	//* 
+	HKLSock& operator=(HKLSock&& oSrc) noexcept;
 
 	//* 
 	//  Default Destuctor for object HKLSock, it will
@@ -68,6 +90,23 @@ public:
 	virtual void Close();
 
 	//* 
+	//  Bind a socket to a specific port and address (E.g. "0.0.0.0", 8080)
+	//  @return		bool to indicate success / fail
+	//  @param		uSocketPort - the port number to bind with socket
+	//  @param		sSockAddress - address allow to accept on this socket
+	//* 
+	virtual bool Bind(UInt16 uSocketPort, const IString& sSockAddress);
+
+	//* 
+	//  Bind a socket to a specific port - Calls on OS functions
+	//  @return		boolean to indicate success / fail
+	//  @param		ptSockAddr - pointer to struct sockaddr, which describe
+	//  			the address and port to bind with
+	//  @param		iSockAddrLen - the length of struct sockaddr
+	//* 
+	virtual bool Bind(const struct sockaddr* ptSockAddr, Int32 iSockAddrLen);
+
+	//* 
 	//  Return the socket handle / descriptor of object
 	//  @return		None
 	//  @param		tSocket - stored the current socket handle of this object
@@ -82,7 +121,6 @@ public:
 	void SetHandle(TSocketFd tSocket);
 
     /*bool Create();
-    void Close();
     bool Connect(const char* ip, int port);
     bool Send(const char* data, int size);
     int Receive(char* buffer, int size);*/
