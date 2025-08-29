@@ -10,7 +10,9 @@
 // Information and shall use it only in accordance with the terms of the license
 // agreement you entered into with HKL.
 //
-// Description: Buffer management.
+// Description: Buffer management. Class HKLBlk is able to store and manage a dynamic buffer of data.
+//				Data can be added, removed, and accessed in a flexible manner.
+//				Accept char arrays, strings, and integers.
 //
 // Revision History:
 //   Date         Version         Name    Description
